@@ -1,4 +1,4 @@
-	#include "Arduino.h"
+#include "Arduino.h"
 	#include "sensorReader.h"
 
 	
@@ -18,23 +18,22 @@
 
 //Proximity sensor reader 
 int Reader::readProxSensors (){
-
+  int prevTime[5];
 	for (int i= 0; i < 4; i++){
 		_prox[i] = analogRead(_zones[i]);
-		Serial.print (_prox[i]);
-		Serial.print (" , ");
-		if (prox[i] = 1){
-			int prevTime[i] = millis();
+		if (_prox[i] = 1){
+		  prevTime[i] = millis();
 			this->_currTime[i] = millis() - prevTime[i];
 		}else{
-			int prevTime[i] = 0;
-			int _currTime[i] = millis() - prevTime[i];
+			prevTime[i] = 0;
+			this-> _currTime[i] = millis() - prevTime[i];
 		}
+    Serial.print (_prox[i]);
+    Serial.print (" , ");
+    Serial.print (_currTime[i]);
+    Serial.print (" , ");
 	}
-	Serial.print (_prox[i]);
-	Serial.print (" , ");
-	Serial.print (_curTime[i]);
-	Serial.print (" , ");
+
 
 	//this->_proximityBinarySequence();
 	//return this->_proximityBinaryToDecimal();

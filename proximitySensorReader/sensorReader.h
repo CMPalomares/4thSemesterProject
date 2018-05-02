@@ -24,7 +24,7 @@
 	 	const int _CAP3 = 3;
 	 	int _zones [5];
 	 	int _prox [5];
-
+    int _currTime[5];
 	 	int _cap1;
 	 	int _cap2;
 	 	int _cap3;
