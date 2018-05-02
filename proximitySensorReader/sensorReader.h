@@ -7,7 +7,7 @@
 	 public:
 	 	Reader();
 	 	int readProxSensors();
-	 	bool readCapSensor (int capSensor);
+	 	int readCapSensors ();
 	 	String getCapPath();
 	 	void setProximitySensors(int zone1, int zone2, int zone3, int zone4, int zone5);
 	 	void setCapacitiveSensors(int cap1, int cap2, int cap3);
@@ -24,7 +24,9 @@
 	 	const int _CAP3 = 3;
 	 	int _zones [5];
 	 	int _prox [5];
-    int _currTime[5];
+   		int _currTime[5];
+   		int _cap[3];
+   		int _capPath[3];
 	 	int _cap1;
 	 	int _cap2;
 	 	int _cap3;

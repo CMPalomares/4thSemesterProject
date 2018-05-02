@@ -20,7 +20,7 @@
 int Reader::readProxSensors (){
   int prevTime[5];
 	for (int i= 0; i < 4; i++){
-		_prox[i] = analogRead(_zones[i]);
+		_prox[i] = digitalRead(_zones[i]);
 		if (_prox[i] = 1){
 		  prevTime[i] = millis();
 			this->_currTime[i] = millis() - prevTime[i];
@@ -40,28 +40,23 @@ int Reader::readProxSensors (){
 }
 
 //Capacitive sensor reader
-bool Reader::readCapSensor(int capSensor){
-	int val = 0;
+int Reader::readCapSensors(){
 	for (int i = 0; i < 2; i++){
-		val += analogRead (capSensor);
-	}
+		_cap[i] += digitalRead (_capPath[i]);
 
-	Serial.print (val);
-	Serial.print (" , ");
+		Serial.print (_cap[i]);
+		Serial.print (" , ");
 
-	bool stateBool = false;
-	this->_capacitivePath = "noinfo";
-	if (val > 0){
-		this->_currentTime = abs(millis()) - this->_previousTime;
-		this->_previousTime = this->_currentTime;
-		Serial.print (this->_currentTime);
-		this->_activatedCapacitiveSensorsSequence(capSensor);
-		this->_capacitiveSetPath();
-		stateBool = true;
-	}else{
-		this->_currentTime = this->_previousTime ;
+		if (_cap[i] > 0){
+			this->_currentTime = abs(millis() - this->_previousTime);
+			this->_previousTime = this->_currentTime;
+			Serial.print (this->_currentTime);
+			this->_activatedCapacitiveSensorsSequence(_cap[i]);
+			this->_capacitiveSetPath();
+		}else{
+			this->_currentTime = this->_previousTime ;
+		}
 	}
-	return stateBool;
 
 }
 
@@ -127,8 +122,6 @@ void Reader::_capacitiveSetPath(){
 		this->_capacitivePath = "e";
 	}else if (pathNumber == 132){
 		this->_capacitivePath = "f";
-	}else{
-		this->_capacitivePath = "noinfo";
 	}
 }
 /*int Reader::_proximityBinarySequence(){
