@@ -13,6 +13,7 @@
 		this->_capacitivePath = "noinfo";
 		this->_currentTime = 0;
 		this->_previousTime = 0;
+		
 	}
 
 //Proximity sensor reader 
@@ -22,10 +23,21 @@ int Reader::readProxSensors (){
 		_prox[i] = analogRead(_zones[i]);
 		Serial.print (_prox[i]);
 		Serial.print (" , ");
+		if (prox[i] = 1){
+			int prevTime[i] = millis();
+			this->_currTime[i] = millis() - prevTime[i];
+		}else{
+			int prevTime[i] = 0;
+			int _currTime[i] = millis() - prevTime[i];
+		}
 	}
+	Serial.print (_prox[i]);
+	Serial.print (" , ");
+	Serial.print (_curTime[i]);
+	Serial.print (" , ");
 
 	//this->_proximityBinarySequence();
-	return this->_proximityBinaryToDecimal();
+	//return this->_proximityBinaryToDecimal();
 }
 
 //Capacitive sensor reader
@@ -120,7 +132,7 @@ void Reader::_capacitiveSetPath(){
 		this->_capacitivePath = "noinfo";
 	}
 }
-int Reader::_proximityBinarySequence(){
+/*int Reader::_proximityBinarySequence(){
 	int result;
 
 	for (int i = 0; i < 5; ++i) {
@@ -128,9 +140,9 @@ int Reader::_proximityBinarySequence(){
 	} 
 
 	return result;
-}
+}*/
 
-int Reader::_proximityBinaryToDecimal(){
+/*int Reader::_proximityBinaryToDecimal(){
 	int result;
 	int aux [5];
 
@@ -152,7 +164,7 @@ int Reader::_proximityBinaryToDecimal(){
 	}
 
 	return result;
-}
+}*/
 
 //Sets the proximity pins enabling the pullups
 void Reader::_setProximityPins(int pin1, int pin2, int pin3, int pin4, int pin5){
