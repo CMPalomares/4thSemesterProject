@@ -1,12 +1,19 @@
 #include "sensorReader.h"
 
 int prox_sensors[5] = {4, 5, 6, 7, 8};
+<<<<<<< HEAD
 int cap_sensors[3] = {1, 2, 4};
 int time_prox [5];
 int time_cap [3];
 int prox_values[5];
 
 Reader sensorReader;
+=======
+int cap_sensors[3] = {1, 2, 3};
+Reader proxSensorReader;
+Reader capSensorReader;
+
+>>>>>>> d584ee16bc9e2fb939d96c3fc5fcfcbce74f5214
 
 
 void setup() {
@@ -16,6 +23,7 @@ void setup() {
                      prox_sensors[2],
                      prox_sensors[3],
                      prox_sensors[4]);
+<<<<<<< HEAD
   sensorReader.setCapacitiveSensors(cap_sensors[0], 
   					 cap_sensors[1], 
   					 cap_sensors[2]);
@@ -39,6 +47,18 @@ void loop() {
 void sendMessage(int p1, int p2, int p3, int p4, int p5, 
 				 int tp1, int tp2, int tp3, int tp4, int tp5,
 				 char pattern, int tc1, int tc2, int tc3) {
+=======
+  capSensorReader.setCapacitiveSensors(cap_sensors[0], 
+  					 cap_sensors[1], 
+  					 cap_sensors[2]);
+}
+
+void loop(){
+  int resultProxReading = proxSensorReader.readProxSensors();
+  int resultCapReading = capSensorReader.readCapSensors();
+  Serial.println(resultProxReading);
+  Serial.println(resultCapReading);
+>>>>>>> d584ee16bc9e2fb939d96c3fc5fcfcbce74f5214
 
 	Serial.print(p1);
 	Serial.print(" ");
