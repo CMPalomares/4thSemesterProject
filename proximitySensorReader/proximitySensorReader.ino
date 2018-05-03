@@ -3,8 +3,9 @@
 int prox_sensors[5] = {4, 5, 6, 7, 8};
 int cap_sensors[3] = {1, 2, 4};
 int time_prox [5];
-int time_cap [3];
+unsigned long time_cap =  0;
 int prox_values[5];
+char cap_path;
 
 Reader sensorReader;
 
@@ -28,17 +29,17 @@ void loop() {
 	
 	sensorReader.getProxValues(prox_values);
 	sensorReader.getTimeProxSensors(time_prox);
-	sensorReader.getTimeCapSensors(time_cap);
-	char cap_path = sensorReader.getCapPath();
+	time_cap = sensorReader.getTimeCapSensors();
+	cap_path = sensorReader.getCapPath();
 
 	sendMessage(prox_values[0], prox_values[1], prox_values[2], prox_values[3], prox_values[4],
 							 time_prox[0], time_prox[1], time_prox[2], time_prox[3], time_prox[4], cap_path, 
-							 time_cap[0], time_cap[1], time_cap[2]);
+							 time_cap);
 }
 
 void sendMessage(int p1, int p2, int p3, int p4, int p5, 
 				 int tp1, int tp2, int tp3, int tp4, int tp5,
-				 char pattern, int tc1, int tc2, int tc3) {
+				 char pattern, unsigned long tc) {
 
 	Serial.print(p1);
 	Serial.print(" ");
@@ -62,10 +63,6 @@ void sendMessage(int p1, int p2, int p3, int p4, int p5,
 	Serial.print(" ");
 	Serial.print(pattern);
 	Serial.print(" ");
-	Serial.print(tc1);
-	Serial.print(" ");
-	Serial.print(tc2);
-	Serial.print(" ");
-	Serial.print(tc3);
+	Serial.print(tc);
 	Serial.println();
 }

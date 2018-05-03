@@ -6,6 +6,7 @@
 		_currentCapActivated = 0;
 		_previousCapActivated = 0;
 		_prePreviousCapActivated = 0;
+	   _capTime = 0;
 	}
 
 //Proximity sensor reader 
@@ -17,11 +18,11 @@ int Reader::readProxSensors() {
 
 		if (_prox[i] == _PROXACTIVE && _prevProx[i] == _PROXINACTIVE) {
 			_currentProxTime[i] = millis();	
-			_proxTime[i] = -1;
+			_proxTime[i] = 1;
 		} else if (_prox[i] == _PROXINACTIVE && _prevProx[i] == _PROXACTIVE) {
 			_proxTime[i] = millis() - _currentProxTime[i];
 		} else if (_prox[i] == _PROXACTIVE && _prevProx[i] == _PROXACTIVE) {
-			_proxTime[i] = -1;
+			_proxTime[i] = 1;
 		} else {
 			_proxTime[i] = 0;
 		}
@@ -48,21 +49,55 @@ void Reader::readCapSensors() {
 	for (int i = 0; i < 3; i++) {
 		_prevCapValues[i] = _capValues[i];
 		_capValues[i] += digitalRead(_cap[i]);
-
-		if (_capValues[i] == _CAPACTIVE && _prevCapValues[i] == _CAPINACTIVE) {
-			_currentCapTime[i] = millis();
-			_capTime[i] = -1;
-		} else if (_capValues[i] == _CAPINACTIVE && _prevCapValues[i] == _CAPACTIVE) {
-			_capTime[i] = millis() - _currentCapTime[i];
-		} else if (_capValues[i] == _CAPACTIVE && _prevCapValues[i] == _CAPACTIVE) {
-			_capTime[i] = -1;
-		} else {
-			_capTime[i] = 0;
-		}
-
-		_activatedCapacitiveSensorsSequence(_cap[i]);
-		_capacitiveSetPath();
 	}
+
+	_allCapInactive();
+	_setCapInteractionTime();
+	
+	for (int i = 0; i < 3; ++i) {
+		_activatedCapacitiveSensorsSequence(_cap[i]);
+	}
+
+	_capacitiveSetPath();
+	
+}
+
+void Reader::_setCapInteractionTime() {
+	if (_allCapsValuesInactive == true){
+		_capTime = 0;
+		if (_allPrevCapsValuesInactive == true){
+			if (millis() - _startTimeInteracion > _NEWINTERACTIONTIME){
+				_firstInteraction = true;
+				if (_firstTime == true){
+					_firstTime = false;
+					_capTime = millis() - _startTimeInteracion;
+				}
+			}else{
+				_capTime = 1;
+			}
+		}
+	}else{
+		_capTime = 1;
+		if(_allPrevCapsValuesInactive == true){
+			if (_firstInteraction == true){
+				_startTimeInteracion = millis();
+				_firstTime = true;
+				_firstInteraction = false;
+			}
+		}
+	}
+}
+
+void Reader::_allCapInactive() {
+	_allPrevCapsValuesInactive = _allCapsValuesInactive;
+	for (int i = 0; i < 3; ++i){		
+		if (_capValues[i] == _CAPACTIVE){
+			_allCapsValuesInactive = false;
+			break;
+		}else{
+			_allCapsValuesInactive = true;
+		}
+	}	
 }
 
 //Saves the capacitive path detected
@@ -71,11 +106,10 @@ char Reader::getCapPath(){
 	return _capacitivePath;
 }
 
-void Reader::getTimeCapSensors(int* time_cap) {
+unsigned long Reader::getTimeCapSensors() {
 	
-	for (int i = 0; i < 3; i++) {
-		time_cap[i] = _capTime[i];
-	}
+	return _capTime;
+	
 } 
 
 // //Sets the proximity sensors
