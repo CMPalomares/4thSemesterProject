@@ -8,7 +8,7 @@ This application sends a message through the serial port, which has four differe
     - If the sensor is inactive but it was inactive in the previous read it sends a 0.
     - If the sensor is active it sends a 1.
     - If the sensor is inactive but it was active in the previous read it sends the time the interaction took in milliseconds. 
-  - **Zone 3** -> The pattern that is detected when reading the three capacitive sensors, sends a char.
+  - **Zone 3** -> The pattern that is detected when reading the three capacitive sensors, sends a number between 1 and 6.
   - **Zone 4** -> The time that the active zone, the three capacitive sensors, has been active, therefore sends 1 value.
     - If there was no interaction and there is still no interaction it sends a 0.
     - If there is interaction it sends a 1.
