@@ -14,6 +14,7 @@
 	 	void setCapacitiveSensors(int cap1, int cap2, int cap3);
 	 	void getTimeProxSensors(int* time_prox);
 	 	void getProxValues(int* prox_values);
+	 	void getCapValues(int* cap_values);
 	 	unsigned long getTimeCapSensors();
 
 

@@ -2,7 +2,7 @@
 The code reads from three proximity sensors and from three capacitive sensors, detects the patter of how have they been activated and generates an output that sends data to max msp
 
 ## The message sent
-This application sends a message through the serial port, which has four different parts:
+This application sends a message through the serial port, which has five different parts:
   - **Zone 1** -> The values for five proximity sensors, therefore sends five values.
   - **Zone 2** -> The time that each of the proximity sensors has been active, therefore sends five values.
     - If the sensor is inactive but it was inactive in the previous read it sends a 0.
@@ -13,5 +13,6 @@ This application sends a message through the serial port, which has four differe
     - If there was no interaction and there is still no interaction it sends a 0.
     - If there is interaction it sends a 1.
     - If there is no interaction but in the previous there was, it sends the time the interaction took in milliseconds. 
+  - **Zone 5** -> Sends the values that the three capacitive values are sensing. 0 for inactive and 1 for active.
 
-`0 0 0 0 0 1 1 1 1 1 f 1`
+`1 0 0 0 0 0 1 1 1 1 6 0 1 1 1`

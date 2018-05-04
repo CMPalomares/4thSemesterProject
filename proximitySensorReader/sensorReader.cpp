@@ -43,6 +43,13 @@ void Reader::getProxValues(int* prox_values) {
 	}
 }
 
+void Reader::getCapValues(int* cap_values) {
+	for (int i = 0; i < 3; ++i)
+	{
+		cap_values[i] = _capValues[i];
+	}
+}
+
 //Capacitive sensor reader
 void Reader::readCapSensors() {
 	
