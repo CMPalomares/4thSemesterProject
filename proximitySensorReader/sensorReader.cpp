@@ -48,17 +48,23 @@ void Reader::readCapSensors() {
 	
 	for (int i = 0; i < 3; i++) {
 		_prevCapValues[i] = _capValues[i];
-		_capValues[i] += digitalRead(_cap[i]);
+		//_capValues[i] = digitalRead(_cap[i]);
+		_capValues[i] = _cap[i].capacitiveSensor(30);
+     if (_capValues[i] < 500){
+        _capValues[i] = _CAPINACTIVE;
+     }else{
+        _capValues[i] = _CAPACTIVE;
+     }
 	}
 
 	_allCapInactive();
-	_setCapInteractionTime();
-	
-	for (int i = 0; i < 3; ++i) {
-		_activatedCapacitiveSensorsSequence(_cap[i]);
-	}
 
+	for (int i = 0; i < 3; ++i) {
+		_activatedCapacitiveSensorsSequence(i + 1);
+	}
+ 
 	_capacitiveSetPath();
+  _setCapInteractionTime();
 	
 }
 
@@ -101,7 +107,7 @@ void Reader::_allCapInactive() {
 }
 
 //Saves the capacitive path detected
-char Reader::getCapPath(){
+int Reader::getCapPath(){
 
 	return _capacitivePath;
 }
@@ -118,7 +124,7 @@ unsigned long Reader::getTimeCapSensors() {
  	_zones[0] = zone1;
  	_zones[1] = zone2;
  	_zones[2] = zone3;
-  	_zones[3] = zone4;
+  _zones[3] = zone4;
  	_zones[4] = zone5;
 
  	_setProximityPins(zone1, zone2, zone3, zone4, zone5);
@@ -126,9 +132,6 @@ unsigned long Reader::getTimeCapSensors() {
 
 //Sets the capacitive sensors
 void Reader::setCapacitiveSensors(int cap1, int cap2, int cap3){
-	_cap[0] = cap1;
-	_cap[1] = cap2;
-	_cap[2] = cap3;
 	_setCapacitivePins(cap1, cap2, cap3);
 }
 
@@ -140,7 +143,7 @@ void Reader::_activatedCapacitiveSensorsSequence(int capSensor){
 		_previousCapActivated = capSensor;
 
 		for (int i = 0; i < 3; i++) {
-			if (capSensor == _cap[i]) {
+			if (capSensor == _CAP[i]) {
 				_currentCapActivated = _CAP[i];
 			}
 		}	
@@ -155,22 +158,22 @@ int Reader::_capacitiveSquencePathCases(){
 //Depending on the capacitive path generated it gives a precise output
 void Reader::_capacitiveSetPath() {
 	int pathNumber = _capacitiveSquencePathCases();
-
-	switch (pathNumber) {
-		case 123: 
-			_capacitivePath = 'a';
-		case 132:
-			_capacitivePath = 'b';
-		case 213:
-			_capacitivePath = 'c';
-		case 231:
-			_capacitivePath = 'd';
-		case 312:
-			_capacitivePath = 'e';
-		default:	
-			_capacitivePath = 'f';
-	}
+ 
+  if (pathNumber == 123 || pathNumber == 132 || pathNumber == 213 || pathNumber == 231){
+    _capacitivePath = 1;
+  } else if (pathNumber == 211 || pathNumber == 113 || pathNumber == 131 || pathNumber == 311) {
+    _capacitivePath = 2;
+  } else if (pathNumber == 221 || pathNumber == 121 || pathNumber == 122 || pathNumber == 223) {
+    _capacitivePath = 3;
+  } else if (pathNumber == 231 || pathNumber == 322 || pathNumber == 323 || pathNumber == 331) {
+    _capacitivePath = 4;
+  } else if (pathNumber == 133 || pathNumber == 111 || pathNumber == 222 || pathNumber == 333) {
+    _capacitivePath = 5;
+  } else {
+    _capacitivePath = 6; 
+  }
 }
+
 
 //Sets the proximity pins enabling the pullups
 void Reader::_setProximityPins(int pin1, int pin2, int pin3, int pin4, int pin5){
@@ -184,7 +187,11 @@ void Reader::_setProximityPins(int pin1, int pin2, int pin3, int pin4, int pin5)
 
 //Sets the proximity pins enabling the pullups
 void Reader::_setCapacitivePins(int pin1, int pin2, int pin3){
-	pinMode(pin1, INPUT);
-	pinMode(pin2, INPUT);
-	pinMode(pin3, INPUT);
+  /*pinMode(pin1, INPUT);
+  pinMode(pin2, INPUT);
+  pinMode(pin3, INPUT);*/
+ 
+	_cap[0] = CapacitiveSensor(2,pin1);
+	_cap[1] = CapacitiveSensor(2,pin2);
+	_cap[2] = CapacitiveSensor(2,pin3);
 }
