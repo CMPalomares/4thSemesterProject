@@ -8,7 +8,7 @@
 	 public:
 	 	Reader();
 	 	int readProxSensors();
-	 	void readCapSensors ();
+	 	int readCapSensors ();
 	 	int getCapPath();
 	 	void setProximitySensors(int zone1, int zone2, int zone3, int zone4, int zone5);
 	 	void setCapacitiveSensors(int cap1, int cap2, int cap3);
@@ -23,8 +23,8 @@
 	 	const int _CAP [3] = {1, 2, 3};
 	 	const int _PROXACTIVE = 0;
 	 	const int _PROXINACTIVE = 1;
-	 	const int _CAPACTIVE = 0;
-	 	const int _CAPINACTIVE = 1;
+	 	const int _CAPACTIVE = 1;
+	 	const int _CAPINACTIVE = 0;
 	 	const int _NEWINTERACTIONTIME = 10000;
 	 	int _zones [5];
 	 	int _prox [5];

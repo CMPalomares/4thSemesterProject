@@ -51,27 +51,29 @@ void Reader::getCapValues(int* cap_values) {
 }
 
 //Capacitive sensor reader
-void Reader::readCapSensors() {
+int Reader::readCapSensors() {
 	
 	for (int i = 0; i < 3; i++) {
 		_prevCapValues[i] = _capValues[i];
-		//_capValues[i] = digitalRead(_cap[i]);
+	//	_capValues[i] = digitalRead(_cap[i]);
 		_capValues[i] = _cap[i].capacitiveSensor(30);
-     if (_capValues[i] < 500){
+     if (_capValues[i] < 70){
         _capValues[i] = _CAPINACTIVE;
      }else{
         _capValues[i] = _CAPACTIVE;
      }
 	}
 
-	_allCapInactive();
-
 	for (int i = 0; i < 3; ++i) {
-		_activatedCapacitiveSensorsSequence(i + 1);
+
+		if (_capValues[i] == _CAPACTIVE){
+			_activatedCapacitiveSensorsSequence(i + 1);
+		}
 	}
  
+ 	_allCapInactive();
 	_capacitiveSetPath();
-  _setCapInteractionTime();
+	_setCapInteractionTime();
 	
 }
 
@@ -117,6 +119,7 @@ void Reader::_allCapInactive() {
 int Reader::getCapPath(){
 
 	return _capacitivePath;
+ 
 }
 
 unsigned long Reader::getTimeCapSensors() {
@@ -144,21 +147,19 @@ void Reader::setCapacitiveSensors(int cap1, int cap2, int cap3){
 
 //Saves the sequence of three capacitive sensors as, preprevious sensor detected, previous sensor detected and current sensor detected
 void Reader::_activatedCapacitiveSensorsSequence(int capSensor){
-	if(capSensor != _previousCapActivated){
 
-		_prePreviousCapActivated = _previousCapActivated;
-		_previousCapActivated = capSensor;
+	_prePreviousCapActivated = _previousCapActivated;
+	_previousCapActivated = _currentCapActivated;
 
 		for (int i = 0; i < 3; i++) {
 			if (capSensor == _CAP[i]) {
 				_currentCapActivated = _CAP[i];
 			}
-		}	
-	}
+		}
 }
 
 //Generates the capacitive sequence properly for its later use so we can have the configuration
-int Reader::_capacitiveSquencePathCases(){
+int Reader::_capacitiveSquencePathCases() {
 	return(_prePreviousCapActivated * 100 + _previousCapActivated * 10 + _currentCapActivated);
 }
 
@@ -167,7 +168,7 @@ void Reader::_capacitiveSetPath() {
 	int pathNumber = _capacitiveSquencePathCases();
  
   if (pathNumber == 123 || pathNumber == 132 || pathNumber == 213 || pathNumber == 231){
-    _capacitivePath = 1;
+    _capacitivePath = 9;
   } else if (pathNumber == 211 || pathNumber == 113 || pathNumber == 131 || pathNumber == 311) {
     _capacitivePath = 2;
   } else if (pathNumber == 221 || pathNumber == 121 || pathNumber == 122 || pathNumber == 223) {

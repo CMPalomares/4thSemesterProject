@@ -1,7 +1,7 @@
 #include "sensorReader.h"
-
-int prox_sensors[5] = {1, 5, 6, 7, 8};
-int cap_sensors[3] = {3, 2, 4};
+#include <CapacitiveSensor.h>
+int prox_sensors[5] = {10, 9, 6, 7, 8};
+int cap_sensors[3] = {3, 4, 5};
 int time_prox [5];
 int cap_values[3];
 unsigned long time_cap =  0;
@@ -27,7 +27,6 @@ void loop() {
 	
 	sensorReader.readProxSensors();
 	sensorReader.readCapSensors();
-	
 	sensorReader.getProxValues(prox_values);
 	sensorReader.getTimeProxSensors(time_prox);
 	time_cap = sensorReader.getTimeCapSensors();
